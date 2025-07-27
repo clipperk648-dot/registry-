@@ -10,7 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { api, type GiftCardSubmission as ApiGiftCardSubmission } from "@/lib/api";
 
 interface GiftCardSubmission {
-  id: string;
+  _id?: string;
   card_number: string;
   balance: number;
   date_checked: string;
