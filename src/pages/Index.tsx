@@ -28,19 +28,19 @@ const Index = () => {
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Check Your{" "}
                 <span className="bg-gradient-primary bg-clip-text text-transparent">
-                  Gift Card Balance
+                  Data Balance
                 </span>
                 <br />
                 Instantly & Securely
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-                The fastest and most secure way to check gift card balances. 
-                Support for all major retailers and instant results.
+                The fastest and most secure way to check balances for any type of data.
+                Enter any text, codes, or identifiers and get instant mock balance results.
               </p>
             </motion.div>
           </div>
 
-          {/* Gift Card Checker */}
+          {/* Data Checker */}
           <div className="max-w-lg mx-auto mb-20">
             <GiftCardChecker />
           </div>
@@ -56,7 +56,7 @@ const Index = () => {
               {
                 icon: Shield,
                 title: "Bank-Level Security",
-                description: "Your data is encrypted and never stored on our servers"
+                description: "Your data is processed securely and stored safely"
               },
               {
                 icon: Zap,
@@ -85,12 +85,12 @@ const Index = () => {
       <section className="py-20 bg-secondary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Supported Gift Cards</h2>
-            <p className="text-muted-foreground">We support gift cards from all major retailers</p>
+            <h2 className="text-3xl font-bold mb-4">Supported Data Types</h2>
+            <p className="text-muted-foreground">We support any type of input data for balance checking</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {["Amazon", "Apple", "Target", "Walmart", "Best Buy", "Starbucks", "Netflix", "Spotify", "Google Play", "Steam", "Xbox", "PlayStation"].map((brand, index) => (
+            {["Gift Cards", "Vouchers", "Codes", "IDs", "Serial Numbers", "Tickets", "Coupons", "Tokens", "Keys", "References", "Numbers", "Text Data"].map((brand, index) => (
               <motion.div
                 key={brand}
                 initial={{ opacity: 0, y: 20 }}
@@ -118,12 +118,12 @@ const Index = () => {
             {[
               {
                 name: "Sarah Johnson",
-                text: "Finally, a gift card checker that actually works! Super fast and secure.",
+                text: "Finally, a data checker that actually works! Super fast and secure.",
                 rating: 5
               },
               {
                 name: "Mike Chen",
-                text: "I love how simple it is to use. Checked 5 cards in under a minute.",
+                text: "I love how simple it is to use. Checked 5 data entries in under a minute.",
                 rating: 5
               },
               {
@@ -162,16 +162,16 @@ const Index = () => {
         <div className="absolute inset-0 bg-background/10"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-6">
-            Ready to Check Your Gift Cards?
+            Ready to Check Your Data?
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8">
-            Join thousands of users who trust GiftChecker for their gift card needs.
+            Join thousands of users who trust DataChecker for their data balance needs.
           </p>
           <Button 
             size="lg" 
             variant="secondary"
             className="bg-background text-foreground hover:bg-background/90"
-            onClick={() => document.getElementById('cardNumber')?.focus()}
+            onClick={() => document.getElementById('inputData')?.focus()}
           >
             <CheckCircle className="mr-2 h-5 w-5" />
             Get Started Now
