@@ -89,9 +89,19 @@ const Settings = () => {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-2xl font-semibold text-slate-900">
-              Gift Card Submissions
-            </h1>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-primary">
+                <Database className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-900">
+                  User Data Storage
+                </h1>
+                <p className="text-sm text-slate-600">
+                  View and manage your stored gift card data
+                </p>
+              </div>
+            </div>
           </div>
           <Button
             variant="destructive"
