@@ -56,8 +56,8 @@ const Settings = () => {
       await queryClient.invalidateQueries({ queryKey: ["giftCardSubmissions"] });
 
       toast({
-        title: "Submissions cleared",
-        description: "All gift card submissions have been deleted",
+        title: "Data cleared successfully",
+        description: "All stored gift card data has been removed",
       });
     } catch (error) {
       console.error('Delete error:', error);
