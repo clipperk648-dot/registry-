@@ -183,13 +183,13 @@ const Settings = () => {
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50">
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Card Number
+                      Gift Card Number
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Balance
+                      Balance Found
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Date Checked
+                      Date Stored
                     </th>
                   </tr>
                 </thead>
