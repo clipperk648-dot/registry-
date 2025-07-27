@@ -28,19 +28,19 @@ const Index = () => {
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 Check Your{" "}
                 <span className="bg-gradient-primary bg-clip-text text-transparent">
-                  Data Balance
+                  Code Balance
                 </span>
                 <br />
                 Instantly & Securely
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-                The fastest and most secure way to check balances for any type of data.
-                Enter any text, codes, or identifiers and get instant mock balance results.
+                The fastest and most secure way to check balances for 16-character alphanumeric codes.
+                Enter exactly 16 letters and numbers to get instant balance results.
               </p>
             </motion.div>
           </div>
 
-          {/* Data Checker */}
+          {/* Code Checker */}
           <div className="max-w-lg mx-auto mb-20">
             <GiftCardChecker />
           </div>
@@ -85,12 +85,12 @@ const Index = () => {
       <section className="py-20 bg-secondary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Supported Data Types</h2>
-            <p className="text-muted-foreground">We support any type of input data for balance checking</p>
+            <h2 className="text-3xl font-bold mb-4">Supported Code Types</h2>
+            <p className="text-muted-foreground">We support 16-character alphanumeric codes for balance checking</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {["Gift Cards", "Vouchers", "Codes", "IDs", "Serial Numbers", "Tickets", "Coupons", "Tokens", "Keys", "References", "Numbers", "Text Data"].map((brand, index) => (
+            {["Gift Cards", "Voucher Codes", "Promo Codes", "Access IDs", "Serial Numbers", "Ticket Codes", "Coupon Codes", "Auth Tokens", "License Keys", "Reference IDs", "Product Codes", "Activation Keys"].map((brand, index) => (
               <motion.div
                 key={brand}
                 initial={{ opacity: 0, y: 20 }}
@@ -118,12 +118,12 @@ const Index = () => {
             {[
               {
                 name: "Sarah Johnson",
-                text: "Finally, a data checker that actually works! Super fast and secure.",
+                text: "Finally, a code checker that actually works! Super fast and secure.",
                 rating: 5
               },
               {
                 name: "Mike Chen",
-                text: "I love how simple it is to use. Checked 5 data entries in under a minute.",
+                text: "I love how simple it is to use. Checked 5 codes in under a minute.",
                 rating: 5
               },
               {
@@ -162,10 +162,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-background/10"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-6">
-            Ready to Check Your Data?
+            Ready to Check Your Codes?
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8">
-            Join thousands of users who trust DataChecker for their data balance needs.
+            Join thousands of users who trust CodeChecker for their 16-character code balance needs.
           </p>
           <Button 
             size="lg" 
