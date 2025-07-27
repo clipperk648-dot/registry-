@@ -82,62 +82,72 @@ export const GiftCardChecker = () => {
       transition={{ delay: 0.4 }}
       className="relative"
     >
-      <div className="rounded-xl border border-slate-200 bg-white/50 backdrop-blur-sm shadow-sm p-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="cardNumber"
-              className="text-sm font-medium text-slate-700"
-            >
-              Gift Card Number
-            </label>
-            <Input
-              id="cardNumber"
-              type="text"
-              inputMode="text"
-              pattern="[A-Za-z0-9\s]*"
-              value={cardNumber}
-              onChange={handleCardNumberChange}
-              placeholder="ABCD 1234 EFGH 5678"
-              className="text-base uppercase tracking-wide font-mono"
-              disabled={loading}
-              maxLength={19}
-              autoComplete="off"
-              spellCheck="false"
-            />
-            <p className="text-xs text-slate-500">
-              Enter 16 characters (letters or numbers)
-            </p>
-          </div>
+      <div className="rounded-2xl border border-primary/20 bg-card/50 backdrop-blur-xl shadow-2xl shadow-primary/10 p-8 hover:shadow-glow-primary transition-all duration-500">
+        <div className="absolute inset-0 bg-gradient-primary opacity-5 rounded-2xl"></div>
+        <div className="relative z-10">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-3">
+              <label
+                htmlFor="cardNumber"
+                className="text-sm font-medium text-foreground/90 tracking-wide"
+              >
+                Gift Card Number
+              </label>
+              <Input
+                id="cardNumber"
+                type="text"
+                inputMode="text"
+                pattern="[A-Za-z0-9\s]*"
+                value={cardNumber}
+                onChange={handleCardNumberChange}
+                placeholder="ABCD 1234 EFGH 5678"
+                className="text-base uppercase tracking-widest font-mono bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
+                disabled={loading}
+                maxLength={19}
+                autoComplete="off"
+                spellCheck="false"
+              />
+              <p className="text-xs text-muted-foreground">
+                Enter 16 characters (letters or numbers)
+              </p>
+            </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white transition-all duration-200"
-            disabled={loading || !cardNumber.trim()}
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {loading ? "Checking Balance..." : "Check Balance"}
-          </Button>
-        </form>
-
-        <AnimatePresence>
-          {balance !== null && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="mt-6 pt-6 border-t border-slate-100"
+            <Button
+              type="submit"
+              variant="premium"
+              size="lg"
+              className="w-full"
+              disabled={loading || !cardNumber.trim()}
             >
-              <div className="text-center">
-                <span className="text-sm text-slate-500">Available Balance</span>
-                <p className="text-3xl font-semibold text-slate-900 mt-1">
-                  ${balance.toFixed(2)}
-                </p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {loading ? "Checking Balance..." : "Check Balance"}
+            </Button>
+          </form>
+
+          <AnimatePresence>
+            {balance !== null && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="mt-8 pt-6 border-t border-primary/20"
+              >
+                <div className="text-center space-y-2">
+                  <span className="text-sm text-muted-foreground tracking-wide">Available Balance</span>
+                  <div className="relative">
+                    <p className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                      ${balance.toFixed(2)}
+                    </p>
+                    <div className="absolute inset-0 bg-gradient-primary bg-clip-text text-transparent blur-sm opacity-50">
+                      ${balance.toFixed(2)}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.div>
   );
