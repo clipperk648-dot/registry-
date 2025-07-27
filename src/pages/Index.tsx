@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Shield, Zap, Clock, Star, CheckCircle, CreditCard } from "lucide-react";
 import { GiftCardChecker } from "@/components/GiftCardChecker";
-import { RecentSubmissions } from "@/components/RecentSubmissions";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
