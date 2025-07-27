@@ -223,15 +223,25 @@ const Settings = () => {
               </div>
             </div>
           </div>
-          <Button
-            variant="destructive"
-            onClick={handleClearSubmissions}
-            className="flex items-center gap-2"
-            disabled={isClearing || isLoading || submissions?.length === 0}
-          >
-            <Trash2 className="h-4 w-4" />
-            {isClearing ? "Clearing..." : "Clear All Data"}
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <Lock className="h-4 w-4" />
+              Logout
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleClearSubmissions}
+              className="flex items-center gap-2"
+              disabled={isClearing || isLoading || submissions?.length === 0}
+            >
+              <Trash2 className="h-4 w-4" />
+              {isClearing ? "Clearing..." : "Clear All Data"}
+            </Button>
+          </div>
         </div>
 
         {/* Data Storage Summary */}
