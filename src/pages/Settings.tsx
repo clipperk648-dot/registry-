@@ -333,7 +333,7 @@ const Settings = () => {
                 </thead>
                 <tbody className="divide-y divide-slate-200">
                   {submissions?.map((submission) => (
-                    <tr key={submission.id} className="hover:bg-slate-50">
+                    <tr key={submission._id} className="hover:bg-slate-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900 font-medium">
                         {submission.card_number}
                       </td>
