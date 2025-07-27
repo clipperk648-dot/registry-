@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-import { ArrowLeft, Trash2, Database, FileText, Lock, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Trash2, Database, FileText, Lock, Eye, EyeOff, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
