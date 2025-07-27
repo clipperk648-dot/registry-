@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 
 import { useToast } from "@/components/ui/use-toast";
+import { api, type GiftCardSubmission as ApiGiftCardSubmission } from "@/lib/api";
 
 interface GiftCardSubmission {
   id: string;
