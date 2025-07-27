@@ -53,27 +53,23 @@ export const GiftCardChecker = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const mockBalance = Math.floor(Math.random() * 500) + 50;
 
-      // Store in localStorage instead of Supabase
-      const submissions = JSON.parse(localStorage.getItem('giftCardSubmissions') || '[]');
-      const newSubmission = {
-        id: Date.now().toString(),
+      // Store in MongoDB via API
+      await api.createGiftCard({
         card_number: cardNumber,
-        balance: mockBalance,
-        date_checked: new Date().toISOString()
-      };
-      submissions.push(newSubmission);
-      localStorage.setItem('giftCardSubmissions', JSON.stringify(submissions));
+        balance: mockBalance
+      });
 
       setBalance(mockBalance);
       toast({
         title: "Balance retrieved successfully",
-        description: "Your card balance has been updated",
+        description: "Your card balance has been saved to database",
       });
     } catch (error) {
+      console.error('Error saving to database:', error);
       toast({
         variant: "destructive",
         title: "Error checking balance",
-        description: "Please try again later",
+        description: "Failed to save to database. Please try again later",
       });
     } finally {
       setLoading(false);
