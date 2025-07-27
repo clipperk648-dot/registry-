@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { CreditCard, Mail, Shield, FileText } from "lucide-react";
-import { DatabaseStatus } from "@/components/DatabaseStatus";
 
 export const Footer = () => {
   return (
