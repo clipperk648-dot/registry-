@@ -227,7 +227,7 @@ const Settings = () => {
                   User Data Storage
                 </h1>
                 <p className="text-sm text-slate-600">
-                  View and manage your stored input data and balances
+                  View and manage your stored 16-character codes and balances
                 </p>
               </div>
             </div>
@@ -305,14 +305,14 @@ const Settings = () => {
           <div className="text-center py-12">
             <FileText className="h-16 w-16 text-slate-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 mb-2">
-              No data stored yet
+              No codes stored yet
             </h3>
             <p className="text-slate-500 mb-6">
-              Start using the data checker to store your input data here
+              Start using the code checker to store your 16-character codes here
             </p>
             <Button onClick={() => navigate("/")} className="inline-flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
-              Check Data
+              Check Codes
             </Button>
           </div>
         ) : (
@@ -322,7 +322,7 @@ const Settings = () => {
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50">
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Input Data
+                      16-Character Code
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Balance Found
