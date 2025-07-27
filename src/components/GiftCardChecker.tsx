@@ -13,18 +13,36 @@ export const GiftCardChecker = () => {
   const [balance, setBalance] = useState<number | null>(null);
   const { toast } = useToast();
 
+  const formatAlphanumeric = (input: string) => {
+    // Accept only letters and numbers, convert to uppercase
+    const cleaned = input.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+
+    // Format in groups of 4
+    const formatted = cleaned.match(/.{1,4}/g)?.join(" ") || cleaned;
+
+    // Limit to 16 characters plus spaces (19 total with spaces)
+    return formatted.slice(0, 19);
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputData(e.target.value);
+    const value = e.target.value;
+    const formatted = formatAlphanumeric(value);
+    setInputData(formatted);
+  };
+
+  const isValidInput = (input: string) => {
+    const cleaned = input.replace(/\s/g, "");
+    return cleaned.length === 16 && /^[A-Za-z0-9]{16}$/.test(cleaned);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!inputData.trim()) {
+    if (!isValidInput(inputData)) {
       toast({
         variant: "destructive",
-        title: "Please enter some data",
-        description: "Input field cannot be empty",
+        title: "Invalid input format",
+        description: "Please enter exactly 16 alphanumeric characters (letters and numbers only)",
       });
       return;
     }
@@ -74,20 +92,24 @@ export const GiftCardChecker = () => {
                 htmlFor="inputData"
                 className="text-sm font-medium text-foreground/90 tracking-wide"
               >
-                Enter Any Data
+                16-Character Code
               </label>
               <Input
                 id="inputData"
                 type="text"
+                inputMode="text"
+                pattern="[A-Za-z0-9\s]*"
                 value={inputData}
                 onChange={handleInputChange}
-                placeholder="Enter any text, numbers, or data..."
-                className="text-base bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
+                placeholder="ABCD 1234 EFGH 5678"
+                className="text-base uppercase tracking-widest font-mono bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
                 disabled={loading}
+                maxLength={19}
                 autoComplete="off"
+                spellCheck="false"
               />
               <p className="text-xs text-muted-foreground">
-                Accepts any type of data - text, numbers, codes, etc.
+                Enter exactly 16 alphanumeric characters (letters A-Z and numbers 0-9)
               </p>
             </div>
 
@@ -99,7 +121,7 @@ export const GiftCardChecker = () => {
               disabled={loading || !inputData.trim()}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading ? "Processing Data..." : "Check Balance"}
+              {loading ? "Checking Code..." : "Check Balance"}
             </Button>
           </form>
 
