@@ -105,20 +105,20 @@ const Settings = () => {
 
     setIsClearing(true);
     try {
-      // Clear localStorage
-      localStorage.removeItem('giftCardSubmissions');
+      // Clear MongoDB data
+      await api.deleteAllGiftCards();
       setSubmissions([]);
 
       toast({
         title: "Data cleared successfully",
-        description: "All stored gift card data has been removed",
+        description: "All stored gift card data has been removed from database",
       });
     } catch (error) {
       console.error('Delete error:', error);
       toast({
         variant: "destructive",
         title: "Error clearing data",
-        description: "Failed to clear stored data. Please try again later",
+        description: "Failed to clear data from database. Please try again later",
       });
     } finally {
       setIsClearing(false);
