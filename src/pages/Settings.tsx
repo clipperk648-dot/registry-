@@ -115,10 +115,23 @@ const Settings = () => {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-8 text-slate-500">Loading...</div>
+          <div className="text-center py-12">
+            <Database className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+            <p className="text-slate-500">Loading your stored data...</p>
+          </div>
         ) : submissions?.length === 0 ? (
-          <div className="text-center py-8 text-slate-500">
-            No gift card submissions yet
+          <div className="text-center py-12">
+            <FileText className="h-16 w-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">
+              No data stored yet
+            </h3>
+            <p className="text-slate-500 mb-6">
+              Start using the gift card checker to store your input data here
+            </p>
+            <Button onClick={() => navigate("/")} className="inline-flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              Check Gift Cards
+            </Button>
           </div>
         ) : (
           <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
