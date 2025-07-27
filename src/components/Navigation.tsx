@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X, CreditCard, Info, MessageCircle, HelpCircle, Shield, FileText } from "lucide-react";
+import { Menu, X, CreditCard, Info, MessageCircle, HelpCircle, Shield, FileText, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
