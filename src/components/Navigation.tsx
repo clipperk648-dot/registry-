@@ -29,7 +29,7 @@ export const Navigation = () => {
               <CreditCard className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-              GiftChecker
+              DataChecker
             </span>
           </Link>
 
