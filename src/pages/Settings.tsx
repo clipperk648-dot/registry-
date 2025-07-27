@@ -63,8 +63,8 @@ const Settings = () => {
       console.error('Delete error:', error);
       toast({
         variant: "destructive",
-        title: "Error clearing submissions",
-        description: "Please try again later",
+        title: "Error clearing data",
+        description: "Failed to clear stored data. Please try again later",
       });
     } finally {
       setIsClearing(false);
