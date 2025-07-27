@@ -20,6 +20,20 @@ const Settings = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isClearing, setIsClearing] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
+  const CORRECT_PASSWORD = "5251";
+
+  useEffect(() => {
+    // Check if user is already authenticated (stored in sessionStorage)
+    const authStatus = sessionStorage.getItem("settings_authenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const { data: submissions, isLoading } = useQuery({
     queryKey: ["giftCardSubmissions"],
