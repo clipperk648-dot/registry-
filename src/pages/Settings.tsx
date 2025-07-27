@@ -36,8 +36,8 @@ const Settings = () => {
   const handleClearSubmissions = async () => {
     if (!submissions?.length) {
       toast({
-        title: "No submissions to clear",
-        description: "The database is already empty",
+        title: "No data to clear",
+        description: "Your data storage is already empty",
       });
       return;
     }
