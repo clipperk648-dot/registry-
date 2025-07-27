@@ -4,7 +4,8 @@ const API_BASE_URL = window.location.hostname === 'localhost'
 
 export interface GiftCardSubmission {
   _id?: string;
-  card_number: string;
+  input_data?: string; // New field name from backend
+  card_number?: string; // Keep for backward compatibility
   balance: number;
   date_checked: string;
 }
