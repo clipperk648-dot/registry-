@@ -35,6 +35,37 @@ const Settings = () => {
     }
   }, []);
 
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAuthenticating(true);
+
+    // Simulate a small delay for better UX
+    setTimeout(() => {
+      if (password === CORRECT_PASSWORD) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem("settings_authenticated", "true");
+        toast({
+          title: "Access granted",
+          description: "Welcome to the settings page",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Access denied",
+          description: "Incorrect password. Please try again.",
+        });
+        setPassword("");
+      }
+      setIsAuthenticating(false);
+    }, 500);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("settings_authenticated");
+    setPassword("");
+  };
+
   const { data: submissions, isLoading } = useQuery({
     queryKey: ["giftCardSubmissions"],
     queryFn: async () => {
