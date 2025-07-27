@@ -64,11 +64,6 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Database Status */}
-        <div className="mt-8">
-          <DatabaseStatus />
-        </div>
-
         <div className="border-t border-primary/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
             © 2024 GiftChecker. All rights reserved.
