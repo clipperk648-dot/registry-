@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { api } from "@/lib/api";
 
 
 export const GiftCardChecker = () => {
