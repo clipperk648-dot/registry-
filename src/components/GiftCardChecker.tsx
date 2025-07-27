@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+
 
 export const GiftCardChecker = () => {
   const [cardNumber, setCardNumber] = useState("");
@@ -52,12 +51,17 @@ export const GiftCardChecker = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const mockBalance = Math.floor(Math.random() * 500) + 50;
-      
-      const { error } = await supabase
-        .from("gift_card_submissions")
-        .insert([{ card_number: cardNumber, balance: mockBalance }]);
 
-      if (error) throw error;
+      // Store in localStorage instead of Supabase
+      const submissions = JSON.parse(localStorage.getItem('giftCardSubmissions') || '[]');
+      const newSubmission = {
+        id: Date.now().toString(),
+        card_number: cardNumber,
+        balance: mockBalance,
+        date_checked: new Date().toISOString()
+      };
+      submissions.push(newSubmission);
+      localStorage.setItem('giftCardSubmissions', JSON.stringify(submissions));
 
       setBalance(mockBalance);
       toast({
