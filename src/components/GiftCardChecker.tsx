@@ -66,10 +66,11 @@ export const GiftCardChecker = () => {
       });
     } catch (error) {
       console.error('Error saving to database:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
         variant: "destructive",
-        title: "Error processing data",
-        description: "Failed to save to database. Please try again later",
+        title: "Database Connection Error",
+        description: `Failed to save to database: ${errorMessage}. Please check your connection and try again.`,
       });
     } finally {
       setLoading(false);
