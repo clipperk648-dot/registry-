@@ -110,9 +110,52 @@ const Settings = () => {
             disabled={isClearing || isLoading || submissions?.length === 0}
           >
             <Trash2 className="h-4 w-4" />
-            {isClearing ? "Clearing..." : "Clear Submissions"}
+            {isClearing ? "Clearing..." : "Clear All Data"}
           </Button>
         </div>
+
+        {/* Data Storage Summary */}
+        {!isLoading && submissions && submissions.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-blue-100">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600">Total Entries</p>
+                  <p className="text-2xl font-semibold text-slate-900">{submissions.length}</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-green-100">
+                  <Database className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600">Total Balance</p>
+                  <p className="text-2xl font-semibold text-slate-900">
+                    ${submissions.reduce((sum, sub) => sum + sub.balance, 0).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-purple-100">
+                  <CreditCard className="h-5 w-5 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-600">Last Check</p>
+                  <p className="text-2xl font-semibold text-slate-900">
+                    {new Date(submissions[0].date_checked).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {isLoading ? (
           <div className="text-center py-12">
