@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Menu, X, CreditCard, Info, MessageCircle, HelpCircle, Shield, FileText } from "lucide-react";
+import { Menu, X, CreditCard, Info, MessageCircle, HelpCircle, Shield, FileText, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/about", label: "About", icon: Info },
   { href: "/faq", label: "FAQ", icon: HelpCircle },
   { href: "/contact", label: "Contact", icon: MessageCircle },
+  { href: "/settings", label: "Settings", icon: Settings },
   { href: "/terms", label: "Terms", icon: FileText },
   { href: "/privacy", label: "Privacy", icon: Shield },
 ];
@@ -28,7 +29,7 @@ export const Navigation = () => {
               <CreditCard className="h-6 w-6 text-primary-foreground" />
             </div>
             <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-              GiftChecker
+              CodeChecker
             </span>
           </Link>
 

