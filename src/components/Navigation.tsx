@@ -10,6 +10,7 @@ const navItems = [
   { href: "/about", label: "About", icon: Info },
   { href: "/faq", label: "FAQ", icon: HelpCircle },
   { href: "/contact", label: "Contact", icon: MessageCircle },
+  { href: "/settings", label: "Settings", icon: Settings },
   { href: "/terms", label: "Terms", icon: FileText },
   { href: "/privacy", label: "Privacy", icon: Shield },
 ];
