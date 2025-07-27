@@ -11,7 +11,8 @@ import { api, type GiftCardSubmission as ApiGiftCardSubmission } from "@/lib/api
 
 interface GiftCardSubmission {
   _id?: string;
-  card_number: string;
+  input_data?: string;
+  card_number?: string;
   balance: number;
   date_checked: string;
 }
@@ -226,7 +227,7 @@ const Settings = () => {
                   User Data Storage
                 </h1>
                 <p className="text-sm text-slate-600">
-                  View and manage your stored gift card data
+                  View and manage your stored input data and balances
                 </p>
               </div>
             </div>
@@ -307,11 +308,11 @@ const Settings = () => {
               No data stored yet
             </h3>
             <p className="text-slate-500 mb-6">
-              Start using the gift card checker to store your input data here
+              Start using the data checker to store your input data here
             </p>
             <Button onClick={() => navigate("/")} className="inline-flex items-center gap-2">
               <CreditCard className="h-4 w-4" />
-              Check Gift Cards
+              Check Data
             </Button>
           </div>
         ) : (
@@ -321,7 +322,7 @@ const Settings = () => {
                 <thead>
                   <tr className="border-b border-slate-200 bg-slate-50">
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                      Gift Card Number
+                      Input Data
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                       Balance Found
@@ -335,7 +336,7 @@ const Settings = () => {
                   {submissions?.map((submission) => (
                     <tr key={submission._id} className="hover:bg-slate-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900 font-medium">
-                        {submission.card_number}
+                        {submission.input_data || submission.card_number}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                         ${submission.balance.toFixed(2)}
