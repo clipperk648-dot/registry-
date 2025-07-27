@@ -23,9 +23,9 @@ mongoose.connect(MONGODB_URI)
   console.error('MongoDB connection error:', error);
 });
 
-// Gift Card Schema
-const giftCardSchema = new mongoose.Schema({
-  card_number: {
+// Data Entry Schema - accepts any type of input data
+const dataEntrySchema = new mongoose.Schema({
+  input_data: {
     type: String,
     required: true,
   },
@@ -39,7 +39,7 @@ const giftCardSchema = new mongoose.Schema({
   }
 });
 
-const GiftCard = mongoose.model('GiftCard', giftCardSchema);
+const DataEntry = mongoose.model('DataEntry', dataEntrySchema);
 
 // Routes
 
