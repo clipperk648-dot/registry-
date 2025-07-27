@@ -89,7 +89,9 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    loadSubmissions();
+    if (isAuthenticated) {
+      loadSubmissions();
+    }
   }, [isAuthenticated]);
 
   const handleClearSubmissions = async () => {
