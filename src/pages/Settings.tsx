@@ -70,15 +70,19 @@ const Settings = () => {
   const [submissions, setSubmissions] = useState<GiftCardSubmission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load submissions from localStorage
-  const loadSubmissions = () => {
+  // Load submissions from MongoDB
+  const loadSubmissions = async () => {
     try {
-      const stored = localStorage.getItem('giftCardSubmissions');
-      const data = stored ? JSON.parse(stored) : [];
-      setSubmissions(data.sort((a: any, b: any) => new Date(b.date_checked).getTime() - new Date(a.date_checked).getTime()));
+      const data = await api.getGiftCards();
+      setSubmissions(data);
     } catch (error) {
       console.error('Error loading submissions:', error);
       setSubmissions([]);
+      toast({
+        variant: "destructive",
+        title: "Error loading data",
+        description: "Failed to load data from database",
+      });
     } finally {
       setIsLoading(false);
     }
