@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+
 import { ArrowLeft, Trash2, Database, FileText, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import { useToast } from "@/components/ui/use-toast";
 
 interface GiftCardSubmission {
@@ -17,7 +17,7 @@ interface GiftCardSubmission {
 
 const Settings = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+
   const { toast } = useToast();
   const [isClearing, setIsClearing] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,18 +66,26 @@ const Settings = () => {
     setPassword("");
   };
 
-  const { data: submissions, isLoading } = useQuery({
-    queryKey: ["giftCardSubmissions"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("gift_card_submissions")
-        .select("*")
-        .order("date_checked", { ascending: false });
+  const [submissions, setSubmissions] = useState<GiftCardSubmission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-      if (error) throw error;
-      return data as GiftCardSubmission[];
-    },
-  });
+  // Load submissions from localStorage
+  const loadSubmissions = () => {
+    try {
+      const stored = localStorage.getItem('giftCardSubmissions');
+      const data = stored ? JSON.parse(stored) : [];
+      setSubmissions(data.sort((a: any, b: any) => new Date(b.date_checked).getTime() - new Date(a.date_checked).getTime()));
+    } catch (error) {
+      console.error('Error loading submissions:', error);
+      setSubmissions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadSubmissions();
+  }, [isAuthenticated]);
 
   const handleClearSubmissions = async () => {
     if (!submissions?.length) {
@@ -90,16 +98,9 @@ const Settings = () => {
 
     setIsClearing(true);
     try {
-      // Using a simpler delete query that will remove all records
-      const { error } = await supabase
-        .from("gift_card_submissions")
-        .delete()
-        .not("id", "is", null); // This will match all records since id can't be null
-
-      if (error) throw error;
-
-      // Force a fresh fetch of the data
-      await queryClient.invalidateQueries({ queryKey: ["giftCardSubmissions"] });
+      // Clear localStorage
+      localStorage.removeItem('giftCardSubmissions');
+      setSubmissions([]);
 
       toast({
         title: "Data cleared successfully",
