@@ -117,6 +117,80 @@ const Settings = () => {
     }
   };
 
+  // Show password prompt if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="min-h-screen w-full bg-white p-4 sm:p-6 flex items-center justify-center"
+      >
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-xl border border-slate-200 p-8 shadow-lg">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-primary rounded-full mb-4">
+                <Lock className="h-8 w-8 text-primary-foreground" />
+              </div>
+              <h1 className="text-2xl font-semibold text-slate-900 mb-2">
+                Protected Access
+              </h1>
+              <p className="text-slate-600">
+                Enter the password to access settings
+              </p>
+            </div>
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pr-10"
+                  disabled={isAuthenticating}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-0 h-full px-3"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => navigate("/")}
+                  disabled={isAuthenticating}
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={!password || isAuthenticating}
+                >
+                  {isAuthenticating ? "Verifying..." : "Access Settings"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
