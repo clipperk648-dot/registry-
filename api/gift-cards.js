@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://muskdaniel549:doJ9XzZRbZWCwYfW@cluster0.0gnp7bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI environment variable is not set. Please configure it in your deployment platform.');
+}
 
 // Data Entry Schema - accepts any type of input data
 const dataEntrySchema = new mongoose.Schema({
