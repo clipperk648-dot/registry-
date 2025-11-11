@@ -13,15 +13,22 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://muskdaniel549:doJ9XzZRbZWCwYfW@cluster0.0gnp7bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI)
-.then(() => {
-  console.log('Connected to MongoDB Atlas');
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error);
-});
+if (!MONGODB_URI) {
+  console.error('ERROR: MONGODB_URI environment variable is not set');
+  console.error('Please configure MONGODB_URI in your .env file (local) or Netlify dashboard (production)');
+}
+
+if (MONGODB_URI) {
+  mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB Atlas');
+  })
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+  });
+}
 
 // Data Entry Schema - accepts any type of input data
 const dataEntrySchema = new mongoose.Schema({
