@@ -1,37 +1,30 @@
-import mongoose from 'mongoose';
+import pg from 'pg';
+import dotenv from 'dotenv';
 
-// MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://muskdaniel549:doJ9XzZRbZWCwYfW@cluster0.0gnp7bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+dotenv.config();
 
-// Data Entry Schema - accepts any type of input data
-const dataEntrySchema = new mongoose.Schema({
-  input_data: {
-    type: String,
-    required: true,
-  },
-  balance: {
-    type: Number,
-    required: true,
-  },
-  date_checked: {
-    type: Date,
-    default: Date.now,
-  }
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
 });
 
-let DataEntry;
-try {
-  DataEntry = mongoose.model('DataEntry');
-} catch {
-  DataEntry = mongoose.model('DataEntry', dataEntrySchema);
-}
-
-// Helper function to connect to MongoDB
-const connectToDatabase = async () => {
-  if (mongoose.connection.readyState >= 1) return;
-  
-  return mongoose.connect(MONGODB_URI);
+// Initialize database
+const initializeDatabase = async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS data_entries (
+        id SERIAL PRIMARY KEY,
+        input_data VARCHAR(255) NOT NULL,
+        balance DECIMAL(10, 2) NOT NULL,
+        date_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+  } catch (error) {
+    console.error('Database initialization error:', error);
+  }
 };
+
+// Initialize on first request
+let initialized = false;
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -45,24 +38,48 @@ export default async function handler(req, res) {
   }
 
   try {
-    await connectToDatabase();
+    if (!initialized) {
+      await initializeDatabase();
+      initialized = true;
+    }
 
     if (req.method === 'GET') {
       // Get all data entries
-      const dataEntries = await DataEntry.find().sort({ date_checked: -1 });
+      const result = await pool.query(
+        'SELECT id, input_data, balance, date_checked FROM data_entries ORDER BY date_checked DESC'
+      );
+      const dataEntries = result.rows.map(row => ({
+        _id: row.id,
+        input_data: row.input_data,
+        balance: row.balance,
+        date_checked: row.date_checked,
+      }));
       res.status(200).json(dataEntries);
     } else if (req.method === 'POST') {
       // Create new data entry
       const { card_number, balance } = req.body;
-      const dataEntry = new DataEntry({
-        input_data: card_number,
-        balance,
-      });
-      const savedDataEntry = await dataEntry.save();
-      res.status(201).json(savedDataEntry);
+      
+      if (!card_number || balance === undefined) {
+        return res.status(400).json({ error: 'card_number and balance are required' });
+      }
+
+      const result = await pool.query(
+        'INSERT INTO data_entries (input_data, balance) VALUES ($1, $2) RETURNING id, input_data, balance, date_checked',
+        [card_number, balance]
+      );
+
+      const savedEntry = result.rows[0];
+      const dataEntry = {
+        _id: savedEntry.id,
+        input_data: savedEntry.input_data,
+        balance: savedEntry.balance,
+        date_checked: savedEntry.date_checked,
+      };
+
+      res.status(201).json(dataEntry);
     } else if (req.method === 'DELETE') {
       // Delete all data entries
-      await DataEntry.deleteMany({});
+      await pool.query('DELETE FROM data_entries');
       res.status(200).json({ message: 'All data entries deleted successfully' });
     } else {
       res.status(405).json({ error: 'Method not allowed' });
