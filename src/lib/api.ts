@@ -1,6 +1,6 @@
 const API_BASE_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:3001/api'
-  : `${window.location.origin}/api`;
+  : `${window.location.origin}/.netlify/functions`;
 
 export interface GiftCardSubmission {
   _id?: string;
