@@ -275,7 +275,7 @@ const Settings = () => {
                 <div>
                   <p className="text-sm text-slate-600">Total Balance</p>
                   <p className="text-2xl font-semibold text-slate-900">
-                    ${submissions.reduce((sum, sub) => sum + sub.balance, 0).toFixed(2)}
+                    ${submissions.reduce((sum, sub) => sum + (typeof sub.balance === 'string' ? parseFloat(sub.balance) : sub.balance), 0).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -339,7 +339,7 @@ const Settings = () => {
                         {submission.input_data || submission.card_number}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                        ${submission.balance.toFixed(2)}
+                        ${(typeof submission.balance === 'string' ? parseFloat(submission.balance) : submission.balance).toFixed(2)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                         {new Date(submission.date_checked).toLocaleDateString()}

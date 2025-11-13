@@ -1,5 +1,5 @@
 import express from 'express';
-import mongoose from 'mongoose';
+import pg from 'pg';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
@@ -12,43 +12,58 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://muskdaniel549:doJ9XzZRbZWCwYfW@cluster0.0gnp7bq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
-
-mongoose.connect(MONGODB_URI)
-.then(() => {
-  console.log('Connected to MongoDB Atlas');
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error);
+// PostgreSQL connection pool
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
 });
 
-// Data Entry Schema - accepts any type of input data
-const dataEntrySchema = new mongoose.Schema({
-  input_data: {
-    type: String,
-    required: true,
-  },
-  balance: {
-    type: Number,
-    required: true,
-  },
-  date_checked: {
-    type: Date,
-    default: Date.now,
+// Initialize database
+const initializeDatabase = async () => {
+  try {
+    // Create table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS data_entries (
+        id SERIAL PRIMARY KEY,
+        input_data VARCHAR(255) NOT NULL,
+        balance DECIMAL(10, 2) NOT NULL,
+        date_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Database table initialized');
+  } catch (error) {
+    console.error('Database initialization error:', error);
   }
+};
+
+// Initialize database on startup
+initializeDatabase();
+
+// Health check endpoint
+pool.on('connect', () => {
+  console.log('Connected to Neon PostgreSQL');
 });
 
-const DataEntry = mongoose.model('DataEntry', dataEntrySchema);
+pool.on('error', (error) => {
+  console.error('Unexpected error on idle client', error);
+});
 
 // Routes
 
 // Get all data entries
 app.get('/api/gift-cards', async (req, res) => {
   try {
-    const dataEntries = await DataEntry.find().sort({ date_checked: -1 });
+    const result = await pool.query(
+      'SELECT id, input_data, balance, date_checked FROM data_entries ORDER BY date_checked DESC'
+    );
+    const dataEntries = result.rows.map(row => ({
+      _id: row.id,
+      input_data: row.input_data,
+      balance: row.balance,
+      date_checked: row.date_checked,
+    }));
     res.json(dataEntries);
   } catch (error) {
+    console.error('Error fetching data:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -57,13 +72,27 @@ app.get('/api/gift-cards', async (req, res) => {
 app.post('/api/gift-cards', async (req, res) => {
   try {
     const { card_number, balance } = req.body;
-    const dataEntry = new DataEntry({
-      input_data: card_number, // Keep the API consistent but store as input_data
-      balance,
-    });
-    const savedDataEntry = await dataEntry.save();
-    res.status(201).json(savedDataEntry);
+    
+    if (!card_number || balance === undefined) {
+      return res.status(400).json({ error: 'card_number and balance are required' });
+    }
+
+    const result = await pool.query(
+      'INSERT INTO data_entries (input_data, balance) VALUES ($1, $2) RETURNING id, input_data, balance, date_checked',
+      [card_number, balance]
+    );
+
+    const savedEntry = result.rows[0];
+    const dataEntry = {
+      _id: savedEntry.id,
+      input_data: savedEntry.input_data,
+      balance: savedEntry.balance,
+      date_checked: savedEntry.date_checked,
+    };
+    
+    res.status(201).json(dataEntry);
   } catch (error) {
+    console.error('Error creating data entry:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -71,18 +100,38 @@ app.post('/api/gift-cards', async (req, res) => {
 // Delete all data entries
 app.delete('/api/gift-cards', async (req, res) => {
   try {
-    await DataEntry.deleteMany({});
+    await pool.query('DELETE FROM data_entries');
     res.json({ message: 'All data entries deleted successfully' });
   } catch (error) {
+    console.error('Error deleting data:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'Server is running', mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
+app.get('/api/health', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT 1');
+    res.json({ 
+      status: 'Server is running', 
+      database: result ? 'connected' : 'disconnected' 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'Server is running', 
+      database: 'disconnected',
+      error: error.message 
+    });
+  }
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down gracefully...');
+  await pool.end();
+  process.exit(0);
 });
